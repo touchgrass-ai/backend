@@ -5,9 +5,9 @@ const cors = require("cors");
 const helmet = require("helmet");
 const morgan = require("morgan");
 const session = require("express-session");
-const passport = require("passport");
+// const passport = require("passport");
 const cookieParser = require("cookie-parser");
-require("./config/passport"); // Import Passport strategy
+// require("./config/passport"); // Import Passport strategy
 const swaggerJsdoc = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
 
@@ -16,26 +16,26 @@ dotenv.config();
 
 const app = express();
 
-// Swagger setup
-const swaggerOptions = {
-    swaggerDefinition: {
-      myapi: '3.0.0',
-      info: {
-        title: 'My API',
-        version: '1.0.0',
-        description: 'API documentation',
-      },
-      servers: [
-        {
-          url: 'http://localhost:3000',
-        },
-      ],
-    },
-    apis: ['./routes/*.js'], // files containing annotations as above
-  };
+// // Swagger setup
+// const swaggerOptions = {
+//     swaggerDefinition: {
+//       myapi: '3.0.0',
+//       info: {
+//         title: 'My API',
+//         version: '1.0.0',
+//         description: 'API documentation',
+//       },
+//       servers: [
+//         {
+//           url: 'http://localhost:3000',
+//         },
+//       ],
+//     },
+//     apis: ['./routes/*.js'], // files containing annotations as above
+//   };
   
-const swaggerDocs = swaggerJsDoc(swaggerOptions);
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+// const swaggerDocs = swaggerJsDoc(swaggerOptions);
+// app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 // Middleware
 app.use(express.json());
@@ -46,18 +46,18 @@ app.use(morgan("dev"));
 app.use(cookieParser());
 
 // Session management
-app.use(
-    session({
-        secret: process.env.SESSION_SECRET,
-        resave: false,
-        saveUninitialized: false,
-        cookie: { secure: false }, // Set to `true` if using HTTPS
-    })
-);
+// app.use(
+//     session({
+//         secret: process.env.SESSION_SECRET,
+//         resave: false,
+//         saveUninitialized: false,
+//         cookie: { secure: false }, // Set to `true` if using HTTPS
+//     })
+// );
 
 // Passport middleware
-app.use(passport.initialize());
-app.use(passport.session());
+// app.use(passport.initialize());
+// app.use(passport.session());
 
 // MongoDB connection
 mongoose
