@@ -5,9 +5,9 @@ const cors = require("cors");
 const helmet = require("helmet");
 const morgan = require("morgan");
 const session = require("express-session");
-// const passport = require("passport");
+const passport = require("passport");
 const cookieParser = require("cookie-parser");
-// require("./config/passport"); // Import Passport strategy
+require("./config/passport"); // Import Passport strategy
 const swaggerJsdoc = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
 
@@ -46,18 +46,18 @@ app.use(morgan("dev"));
 app.use(cookieParser());
 
 // Session management
-// app.use(
-//     session({
-//         secret: process.env.SESSION_SECRET,
-//         resave: false,
-//         saveUninitialized: false,
-//         cookie: { secure: false }, // Set to `true` if using HTTPS
-//     })
-// );
+app.use(
+    session({
+        secret: process.env.SESSION_SECRET,
+        resave: false,
+        saveUninitialized: false,
+        cookie: { secure: false }, // Set to `true` if using HTTPS
+    })
+);
 
 // Passport middleware
-// app.use(passport.initialize());
-// app.use(passport.session());
+app.use(passport.initialize());
+app.use(passport.session());
 
 // MongoDB connection
 mongoose
