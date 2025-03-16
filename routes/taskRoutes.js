@@ -5,6 +5,13 @@ const router = express.Router();
 
 /**
  * @swagger
+ * tags:
+ *   name: Tasks
+ *   description: API endpoints for managing tasks
+ */
+
+/**
+ * @swagger
  * components:
  *   schemas:
  *     Task:
@@ -39,6 +46,46 @@ const router = express.Router();
  *         taskCompleted: false
  */
 
+/**
+ * @swagger
+ * /tasks:
+ *   post:
+ *     summary: Create a new task
+ *     tags: [Tasks]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               type:
+ *                 type: string
+ *                 description: The type of the task
+ *               detail:
+ *                 type: string
+ *                 description: The details of the task
+ *               rewardType:
+ *                 type: string
+ *                 description: The type of reward associated with this task
+ *               completionCriteria:
+ *                 type: string
+ *                 description: The criteria required to complete the task
+ *               taskCompleted:
+ *                 type: boolean
+ *                 description: Whether the task has been completed or not
+ *             example:
+ *               type: "challenge"
+ *               detail: "Win 5 ranked games"
+ *               rewardType: "gold"
+ *               completionCriteria: "Win 5 games in ranked mode"
+ *               taskCompleted: false
+ *     responses:
+ *       201:
+ *         description: Task created successfully
+ *       500:
+ *         description: Error creating task
+ */
 // Create a new task
 router.post("/", async (req, res) => {
     try {
@@ -53,6 +100,16 @@ router.post("/", async (req, res) => {
     }
 });
 
+/**
+ * @swagger
+ * /tasks:
+ *   get:
+ *     summary: Get all tasks
+ *     tags: [Tasks]
+ *     responses:
+ *       200:
+ *         description: List of all tasks
+ */
 // Get all tasks
 router.get("/", async (req, res) => {
     try {
@@ -63,6 +120,27 @@ router.get("/", async (req, res) => {
     }
 });
 
+/**
+ * @swagger
+ * /tasks/{id}:
+ *   get:
+ *     summary: Get a task by ID
+ *     tags: [Tasks]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the task to fetch
+ *     responses:
+ *       200:
+ *         description: Task details
+ *       404:
+ *         description: Task not found
+ *       500:
+ *         description: Error fetching task
+ */
 // Get a task by ID
 router.get("/:id", async (req, res) => {
     try {
@@ -75,6 +153,50 @@ router.get("/:id", async (req, res) => {
     }
 });
 
+/**
+ * @swagger
+ * /tasks/{id}:
+ *   put:
+ *     summary: Update a task by ID
+ *     tags: [Tasks]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the task to update
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               type:
+ *                 type: string
+ *               detail:
+ *                 type: string
+ *               rewardType:
+ *                 type: string
+ *               completionCriteria:
+ *                 type: string
+ *               taskCompleted:
+ *                 type: boolean
+ *             example:
+ *               type: "quest"
+ *               detail: "Win 5 games"
+ *               rewardType: "silver"
+ *               completionCriteria: "Win 5 ranked games"
+ *               taskCompleted: true
+ *     responses:
+ *       200:
+ *         description: Task updated successfully
+ *       404:
+ *         description: Task not found
+ *       500:
+ *         description: Error updating task
+ */
 // Update a task by ID
 router.put("/:id", async (req, res) => {
     try {
@@ -88,6 +210,27 @@ router.put("/:id", async (req, res) => {
     }
 });
 
+/**
+ * @swagger
+ * /tasks/{id}:
+ *   delete:
+ *     summary: Delete a task by ID
+ *     tags: [Tasks]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the task to delete
+ *     responses:
+ *       200:
+ *         description: Task deleted successfully
+ *       404:
+ *         description: Task not found
+ *       500:
+ *         description: Error deleting task
+ */
 // Delete a task by ID
 router.delete("/:id", async (req, res) => {
     try {

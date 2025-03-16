@@ -8,6 +8,13 @@ const router = express.Router();
 
 /**
  * @swagger
+ * tags:
+ *   name: User
+ *   description: API endpoints for managing User
+ */
+
+/**
+ * @swagger
  * components:
  *   schemas:
  *     User:
@@ -55,11 +62,53 @@ const router = express.Router();
  *         email: "john@example.com"
  *         gender: "male"
  *         preferences: ["gaming", "reading"]
- *         rewardsEarned: ["60b8c82d...", "60b8c92e..."]
- *         tasks: ["60b8d32a...", "60b8d43f..."]
  */
 
-// Create a new user
+/**
+ * @swagger
+ * /users:
+ *   post:
+ *     summary: Create a new user
+ *     tags: [Users]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               googleId:
+ *                 type: string
+ *                 description: Google authentication ID of the user
+ *               name:
+ *                 type: string
+ *                 description: Full name of the user
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 description: Email address of the user
+ *               gender:
+ *                 type: string
+ *                 description: Gender of the user
+ *               preferences:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                 description: List of user preferences (tags)
+ *             example:
+ *               googleId: "123456789"
+ *               name: "John Doe"
+ *               email: "john@example.com"
+ *               gender: "male"
+ *               preferences: ["gaming", "reading"]
+ *     responses:
+ *       201:
+ *         description: User created successfully
+ *       400:
+ *         description: User already exists
+ *       500:
+ *         description: Error creating user
+ */
 router.post("/", async (req, res) => {
     try {
         const { googleId, name, email, gender, preferences } = req.body;
@@ -88,7 +137,6 @@ router.post("/", async (req, res) => {
  *       200:
  *         description: List of all users
  */
-// Get all users
 router.get("/", async (req, res) => {
     try {
         const users = await User.find().populate("rewardsEarned").populate("tasks");
@@ -114,7 +162,6 @@ router.get("/", async (req, res) => {
  *       200:
  *         description: User data
  */
-// Get a user by ID
 router.get("/:id", async (req, res) => {
     try {
         const user = await User.findById(req.params.id).populate("rewardsEarned").populate("tasks");
@@ -126,7 +173,49 @@ router.get("/:id", async (req, res) => {
     }
 });
 
-// Update a user by ID
+/**
+ * @swagger
+ * /users/{id}:
+ *   put:
+ *     summary: Update user by ID
+ *     tags: [Users]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the user to update
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *               gender:
+ *                 type: string
+ *               preferences:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *             example:
+ *               name: "Updated Name"
+ *               email: "updated@example.com"
+ *               gender: "male"
+ *               preferences: ["coding", "music"]
+ *     responses:
+ *       200:
+ *         description: User updated successfully
+ *       404:
+ *         description: User not found
+ *       500:
+ *         description: Error updating user
+ */
 router.put("/:id", async (req, res) => {
     try {
         const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, { new: true });
@@ -139,7 +228,27 @@ router.put("/:id", async (req, res) => {
     }
 });
 
-// Delete a user by ID
+/**
+ * @swagger
+ * /users/{id}:
+ *   delete:
+ *     summary: Delete user by ID
+ *     tags: [Users]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the user to delete
+ *     responses:
+ *       200:
+ *         description: User deleted successfully
+ *       404:
+ *         description: User not found
+ *       500:
+ *         description: Error deleting user
+ */
 router.delete("/:id", async (req, res) => {
     try {
         const deletedUser = await User.findByIdAndDelete(req.params.id);
@@ -152,7 +261,35 @@ router.delete("/:id", async (req, res) => {
     }
 });
 
-// Assign a reward to a user
+/**
+ * @swagger
+ * /users/{userId}/reward/{rewardId}:
+ *   post:
+ *     summary: Assign a reward to a user
+ *     tags: [Users]
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the user
+ *       - in: path
+ *         name: rewardId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the reward to assign
+ *     responses:
+ *       200:
+ *         description: Reward assigned successfully
+ *       400:
+ *         description: Reward already assigned
+ *       404:
+ *         description: User or Reward not found
+ *       500:
+ *         description: Error assigning reward
+ */
 router.post("/:userId/reward/:rewardId", async (req, res) => {
     try {
         const { userId, rewardId } = req.params;
@@ -176,7 +313,33 @@ router.post("/:userId/reward/:rewardId", async (req, res) => {
     }
 });
 
-// Remove a reward from a user
+/**
+ * @swagger
+ * /users/{userId}/reward/{rewardId}:
+ *   delete:
+ *     summary: Remove a reward from a user
+ *     tags: [Users]
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the user
+ *       - in: path
+ *         name: rewardId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the reward to remove
+ *     responses:
+ *       200:
+ *         description: Reward removed successfully
+ *       404:
+ *         description: User not found
+ *       500:
+ *         description: Error removing reward
+ */
 router.delete("/:userId/reward/:rewardId", async (req, res) => {
     try {
         const { userId, rewardId } = req.params;
@@ -193,7 +356,35 @@ router.delete("/:userId/reward/:rewardId", async (req, res) => {
     }
 });
 
-// Assign a task to a user
+/**
+ * @swagger
+ * /users/{userId}/task/{taskId}:
+ *   post:
+ *     summary: Assign a task to a user
+ *     tags: [Users]
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the user
+ *       - in: path
+ *         name: taskId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the task to assign
+ *     responses:
+ *       200:
+ *         description: Task assigned successfully
+ *       400:
+ *         description: Task already assigned
+ *       404:
+ *         description: User or Task not found
+ *       500:
+ *         description: Error assigning task
+ */
 router.post("/:userId/task/:taskId", async (req, res) => {
     try {
         const { userId, taskId } = req.params;
@@ -217,7 +408,33 @@ router.post("/:userId/task/:taskId", async (req, res) => {
     }
 });
 
-// Remove a task from a user
+/**
+ * @swagger
+ * /users/{userId}/task/{taskId}:
+ *   delete:
+ *     summary: Remove a task from a user
+ *     tags: [Users]
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the user
+ *       - in: path
+ *         name: taskId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the task to remove
+ *     responses:
+ *       200:
+ *         description: Task removed successfully
+ *       404:
+ *         description: User not found
+ *       500:
+ *         description: Error removing task
+ */
 router.delete("/:userId/task/:taskId", async (req, res) => {
     try {
         const { userId, taskId } = req.params;

@@ -8,7 +8,7 @@ const session = require("express-session");
 const passport = require("passport");
 const cookieParser = require("cookie-parser");
 require("./config/passport"); // Import Passport strategy
-const swaggerJsdoc = require("swagger-jsdoc");
+const swaggerJsDoc = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
 
 // Load environment variables
@@ -16,26 +16,26 @@ dotenv.config();
 
 const app = express();
 
-// // Swagger setup
-// const swaggerOptions = {
-//     swaggerDefinition: {
-//       myapi: '3.0.0',
-//       info: {
-//         title: 'My API',
-//         version: '1.0.0',
-//         description: 'API documentation',
-//       },
-//       servers: [
-//         {
-//           url: 'http://localhost:3000',
-//         },
-//       ],
-//     },
-//     apis: ['./routes/*.js'], // files containing annotations as above
-//   };
+// Swagger setup
+const swaggerOptions = {
+    swaggerDefinition: {
+      openapi: '3.0.0',
+      info: {
+        title: 'My API',
+        version: '1.0.0',
+        description: 'API documentation',
+      },
+      servers: [
+        {
+          url: 'http://localhost:5000',
+        },
+      ],
+    },
+    apis: ['./routes/*.js'], // files containing annotations as above
+  };
   
-// const swaggerDocs = swaggerJsDoc(swaggerOptions);
-// app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+const swaggerDocs = swaggerJsDoc(swaggerOptions);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 // Middleware
 app.use(express.json());
