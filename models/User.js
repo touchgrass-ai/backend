@@ -8,7 +8,10 @@ const UserSchema = new mongoose.Schema({
     exp: { type: Number, default: 0 },
     rewardsEarned: [{ type: mongoose.Schema.Types.ObjectId, ref: "Reward" }],
     preferences: [{ type: String , enum: preferenceEnum}], // Array of tag strings
-    tasks: [{ type: mongoose.Schema.Types.ObjectId, ref: "Task" }]
+    tasks: [{
+        task: { type: mongoose.Schema.Types.ObjectId, ref: "Task" },
+        completed: false
+    }]
 });
 
 module.exports = mongoose.model("User", UserSchema);

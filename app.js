@@ -41,8 +41,8 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors({
-	origin: "http://localhost:3000",
-	credentials: true
+    origin: process.env.FRONTEND_URL, // Allow requests from the frontend
+    credentials: true // Allow cookies & authentication headers
 }));
 app.use(helmet());
 app.use(morgan("dev"));

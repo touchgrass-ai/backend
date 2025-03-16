@@ -1,7 +1,10 @@
 const express = require("express");
 const passport = require("passport");
-
+const dotenv = require("dotenv")
 const router = express.Router();
+
+// Load environment variables
+dotenv.config();
 
 /**
  * @swagger
@@ -36,9 +39,25 @@ router.get("/google", passport.authenticate("google", { scope: ["profile", "emai
  */
 router.get(
     "/google/callback",
-    passport.authenticate("google", { failureRedirect: "/" }),
-    (req, res) => {
-        res.redirect("/profile"); // Redirect to frontend/profile page
+    passport.authenticate("google", { failureRedirect: `${process.env.FRONTEND_URL}/error` }),
+    async (req, res) => {
+        try {
+            const userEmail = req.user.email;
+
+            // Check if the user exists in the database
+            const existingUser = await User.findOne({ email: userEmail });
+
+            if (!existingUser) {
+                // Redirect to registration page if the user does not exist
+                return res.redirect(`${process.env.FRONTEND_URL}/register`); // Change to your actual frontend registration route
+            }
+
+            // Redirect to profile page if the user exists
+            res.redirect(`${process.env.FRONTEND_URL}/dashboard`);
+        } catch (error) {
+            console.error("Error checking user existence:", error);
+            res.redirect(`${process.env.FRONTEND_URL}/error`); // Redirect to an error page if something goes wrong
+        }
     }
 );
 
