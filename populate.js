@@ -3,6 +3,7 @@ const dotenv = require("dotenv");
 const User = require("./models/User"); // Adjust based on actual path
 const Task = require("./models/Task"); // Adjust based on actual path
 const Reward = require("./models/Reward"); // Adjust based on actual path
+const { getRandomNumber } = require("./util/randon_num");
 
 dotenv.config(); // Load environment variables
 
@@ -48,7 +49,7 @@ const generateTasks = () => {
     return Array.from({ length: 50 }, (_, i) => ({
         type: taskTypes[Math.floor(Math.random() * taskTypes.length)].toLowerCase(),
         detail: `${activities[Math.floor(Math.random() * activities.length)]} ${locations[Math.floor(Math.random() * locations.length)]}`,
-        rewardType: ["Gold", "Silver", "Bronze", "Platinum", "Diamond"][Math.floor(Math.random() * 5)].toLowerCase(),
+        exp: getRandomNumber(),
         completionCriteria: `Complete this activity and check-in with a photo at ${locations[Math.floor(Math.random() * locations.length)]}`,
         taskCompleted: false
     }));
