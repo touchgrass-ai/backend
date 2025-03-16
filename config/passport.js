@@ -18,15 +18,19 @@ passport.use(
                 let user = await User.findOne({ googleId: profile.id });
 
                 if (!user) {
-                    // user = new User({
-                    //     googleId: profile.id,
-                    //     username: profile.displayName, // Using Google profile name as username
-                    //     profilePicture: profile.photos[0].value,
-                    //     exp: 0, // Default experience points
-                    //     rewardsEarned: [], // Empty rewards array
-                    //     preferences: [], // Empty preferences array (to be set by user later)
-                    //     tasks: [] // Empty tasks array
-                    // });
+                    user = new User({
+                        googleId: profile.id,
+                        username: profile.displayName, // Using Google profile name as username
+                        profilePicture: profile.photos[0].value,
+                        exp: 0, // Default experience points
+                        rewardsEarned: [], // Empty rewards array
+                        preferences: [], // Empty preferences array (to be set by user later)
+                        tasks: [] // Empty tasks array
+                    });
+
+                    user.redirectTo = "/register"; // Custom field for redirecting
+                } else {
+                    user.redirectTo = "/dashboard"; // Custom field for redirecting existing users
                 }
 
                 return done(null, user);
