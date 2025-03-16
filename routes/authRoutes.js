@@ -3,6 +3,7 @@ const passport = require("passport");
 const dotenv = require("dotenv")
 const router = express.Router();
 require("../config/passport"); // Import Passport strategy
+const User = require("../models/User");
 
 // Load environment variables
 dotenv.config();
