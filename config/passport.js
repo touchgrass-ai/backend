@@ -12,6 +12,20 @@ passport.use(
             clientID: process.env.GOOGLE_CLIENT_ID,
             clientSecret: process.env.GOOGLE_CLIENT_SECRET,
             callbackURL: `http://localhost:5000/auth/google/callback`,
+        },
+        async (accessToken, refreshToken, profile, done) => {
+            try {
+                let user = await User.findOne({ googleId: profile.id });
+
+                if (!user) {
+                    // If user does not exist, redirect them to another website
+                    return done(null, { redirectTo: "http://localhost:5000/auth/google/callback" });
+                } else {
+                    return done(null, { id: user.id, redirectTo: "http://localhost:5000/auth/google/callback" });
+                }
+            } catch (error) {
+                return done(error, null);
+            }
         }
     )
 );
