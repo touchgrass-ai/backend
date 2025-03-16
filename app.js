@@ -40,7 +40,10 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors());
+app.use(cors({
+    origin: process.env.FRONTEND_URL, // Allow requests from the frontend
+    credentials: true // Allow cookies & authentication headers
+}));
 app.use(helmet());
 app.use(morgan("dev"));
 app.use(cookieParser());

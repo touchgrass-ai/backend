@@ -411,6 +411,76 @@ router.post("/:userId/task/:taskId", async (req, res) => {
 /**
  * @swagger
  * /users/{userId}/task/{taskId}:
+ *   put:
+ *     summary: Update the completion status of a task for a user
+ *     tags: [Users]
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the user
+ *       - in: path
+ *         name: taskId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the task assigned to the user
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               completed:
+ *                 type: boolean
+ *                 description: Indicates whether the task is completed
+ *             example:
+ *               completed: true
+ *     responses:
+ *       200:
+ *         description: Task completion status updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Task updated successfully"
+ *                 user:
+ *                   type: object
+ *                   description: Updated user data
+ *       404:
+ *         description: User or Task not found
+ *       500:
+ *         description: Error updating task status
+ */
+router.put("/:userId/task/:taskId", async (req, res) => {
+    try {
+        const { userId, taskId } = req.params;
+        const { completed } = req.body; // Get completion status from request
+
+        const user = await User.findById(userId);
+        if (!user) return res.status(404).json({ error: "User not found" });
+
+        const taskIndex = user.tasks.findIndex(t => t.task.toString() === taskId);
+        if (taskIndex === -1) return res.status(404).json({ error: "Task not found for user" });
+
+        user.tasks[taskIndex].completed = completed; // Update completed status
+        await user.save();
+
+        res.json({ message: "Task updated successfully", user });
+    } catch (err) {
+        res.status(500).json({ error: "Error updating task status" });
+    }
+});
+
+/**
+ * @swagger
+ * /users/{userId}/task/{taskId}:
  *   delete:
  *     summary: Remove a task from a user
  *     tags: [Users]
