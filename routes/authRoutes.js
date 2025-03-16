@@ -2,7 +2,7 @@ const express = require("express");
 const passport = require("passport");
 const dotenv = require("dotenv")
 const router = express.Router();
-require("./config/passport"); // Import Passport strategy
+require("../config/passport"); // Import Passport strategy
 
 // Load environment variables
 dotenv.config();
