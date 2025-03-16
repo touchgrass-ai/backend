@@ -71,6 +71,9 @@ mongoose
 // Routes
 app.use("/auth", require("./routes/authRoutes")); // OAuth routes
 app.use("/users", require("./routes/userRoutes")); // User-related routes
+app.use("/task", require("./routes/taskRoutes")); // User-related routes
+app.use("/reward", require("./routes/rewardRoutes")); // User-related routes
+app.use("/recommend", require("./routes/recommendRoutes")); // User-related routes
 
 // Basic route
 app.get("/", (req, res) => {
