@@ -27,6 +27,10 @@ passport.use(
                         preferences: [], // Empty preferences array (to be set by user later)
                         tasks: [] // Empty tasks array
                     });
+
+                    user.redirectTo = "/register"; // Custom field for redirecting
+                } else {
+                    user.redirectTo = "/dashboard"; // Custom field for redirecting existing users
                 }
 
                 return done(null, user);
